@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Button, Form, ListGroup } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function Home() {
     const navigate = useNavigate()
@@ -47,6 +47,24 @@ function Home() {
     function resetSearch(e){
         document.getElementById('searchForm').reset()
     }
+
+    const completeTask = (id) => {
+        setTodo(todo.map((item) => {
+            if(item.id === id){
+                return {
+                    ...item, complete: !item.complete
+                }
+            } return item
+        }))
+    }
+
+    // const setData = (id, task) => {
+    //     console.log(id)
+    //     console.log(task)
+    //     localStorage.setItem('ID', id)
+    //     localStorage.setItem('Task', task)
+    // }
+
   return (
 
     <div>
@@ -81,9 +99,11 @@ function Home() {
                         style={{backgroundColor: data.complete? "green" : "white", color: data.complete? 'white' : 'black'}}>
                             <strong>{data.task}</strong>
                                 <div className=''>
-                                    <Button size='sm'
+                                    <Button size='sm' onClick={() => completeTask(data.id)}
                                     style={{backgroundColor: data.complete? 'cyan' : 'grey'}}></Button>
-                                    <Button onClick={()=> navigate(`/edit/${data.id}`)} className='actionButton mx-2' variant='warning'>Edit</Button>
+                                    <Link to= {`/edit/${data.id}`}>
+                                    <Button className='actionButton mx-2' variant='warning'>Edit</Button>
+                                    </Link>
                                     <Button onClick={()=>deleteTask(data.id)} className='actionButton' variant='danger'>Delete</Button>
                                 </div>
                         </ListGroup.Item>
