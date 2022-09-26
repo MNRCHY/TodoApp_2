@@ -7,6 +7,7 @@ function Home() {
     const navigate = useNavigate()
     const [todo, setTodo] = useState([])
     const [task, setTask] = useState ([])
+    const [searchTask, setSearchTask] = useState('')
 
     function loadList(){
         axios.get('https://632b01531090510116ce5636.mockapi.io/todos')
@@ -42,6 +43,10 @@ function Home() {
             alert('Task berhasil dihapus')
         })
     }
+
+    function resetSearch(e){
+        document.getElementById('searchForm').reset()
+    }
   return (
 
     <div>
@@ -50,8 +55,9 @@ function Home() {
         <div className='HeadForm m-4 p-3 d-flex justify-content-between border rounded'>
             <Button variant='success' onClick={() => navigate('/add')}>Add New Task</Button>
             <Form className='d-flex'>
-                <Form.Control className='mx-2' type='text' placeholder='Search...'></Form.Control>
-                <Button> Search </Button>
+                <Form.Control id='searchForm' className='mx-2' type='text' placeholder='Search...'
+                onChange={e => {setSearchTask(e.target.value)}}></Form.Control>
+                <Button type='reset form' onClick={resetSearch} variant='danger' size='sm'> Clear </Button>
             </Form>
         </div>
 
@@ -63,7 +69,13 @@ function Home() {
             </div>
             <ListGroup className='mt-4'>
                 {
-                    todo?.map((data) => {
+                    todo.filter((data) => {
+                        if (searchTask ===''){
+                            return data
+                        } else if (data.task.toLowerCase().includes(searchTask.toLowerCase())){
+                            return data
+                        }
+                    }).map((data) => {
                         return (
                         <ListGroup.Item key={data.id} className='d-flex justify-content-between'
                         style={{backgroundColor: data.complete? "green" : "white", color: data.complete? 'white' : 'black'}}>
